@@ -12,6 +12,13 @@ import { Bookmark } from '../bookmark';
 })
 export class OverviewPageComponent {
   bookmarkFormData?: Bookmark;
+  bookmarksList: Bookmark[];
+
+  constructor() {
+    // get bookmarks from local storage
+    const linksInStorage = localStorage.getItem('links');
+    this.bookmarksList = linksInStorage ? JSON.parse(linksInStorage) : [];
+  }
 
   setBookmarkEditData(bookmark: Bookmark) {
     this.bookmarkFormData = bookmark;

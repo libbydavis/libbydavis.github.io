@@ -1,6 +1,6 @@
 <div class="m-3">
     <div class="mb-4">
-        <app-bookmark-form [bookmarkToEdit]="bookmarkFormData" />
+        <app-bookmark-form [bookmarkToEdit]="bookmarkFormData" [(bookmarksList)]="bookmarksList" />
     </div>
-    <app-bookmark-list (onEditBookmark)="setBookmarkEditData($event)" />
+    <app-bookmark-list (onEditBookmark)="setBookmarkEditData($event)" [(bookmarksList)]="bookmarksList" />
 </div>

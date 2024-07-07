@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { Bookmark } from '../bookmark';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bookmark-list',
@@ -11,10 +10,11 @@ import { Router } from '@angular/router';
   styleUrl: './bookmark-list.component.css'
 })
 export class BookmarkListComponent {
-  bookmarksList: Bookmark[];
+  @Input({required: true}) bookmarksList!: Bookmark[];
+  @Output() bookmarksListChange = new EventEmitter();
   currentPage = 1;
   itemsPerPage = 20;
-  bookmarksCurrentPageList: Bookmark[];
+  bookmarksCurrentPageList!: Bookmark[];
   @Output() onEditBookmark = new EventEmitter();
 
   getBookmarksForCurrentPage(pageNumber: number) {
@@ -22,13 +22,16 @@ export class BookmarkListComponent {
     return this.bookmarksList.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
-  constructor() {
-    // get bookmarks from local storage
-    const linksInStorage = localStorage.getItem('links');
-    this.bookmarksList = linksInStorage ? JSON.parse(linksInStorage) : [];
-
+  ngOnInit() {
     // get first page of bookmarks
     this.bookmarksCurrentPageList = this.getBookmarksForCurrentPage(this.currentPage);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const bookmarkListData: Bookmark = changes['bookmarksList']?.currentValue;
+    if (bookmarkListData) {
+      this.bookmarksCurrentPageList = this.getBookmarksForCurrentPage(this.currentPage);
+    }
   }
 
   onPageChange(pageNumber: number) {
@@ -40,11 +43,8 @@ export class BookmarkListComponent {
 
     if (shouldDelete) {
       // remove bookmark from list and save change to local storage
-      this.bookmarksList = this.bookmarksList.filter(bookmark => bookmark.id !== id);
+      this.bookmarksListChange.emit(this.bookmarksList.filter(bookmark => bookmark.id !== id));
       localStorage.setItem('links', JSON.stringify(this.bookmarksList));
-
-      // update page of bookmarks from new bookmarks list
-      this.bookmarksCurrentPageList = this.getBookmarksForCurrentPage(this.currentPage);
     }
   }
 
