@@ -1,0 +1,33 @@
+<div>
+    <h2>{{addOrEditLabel}}</h2>
+    <form (ngSubmit)="onSubmit()" #bookmarkForm="ngForm">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+            <input id="name" class="form-control" type="text" [(ngModel)]="model.name" name="name" #name="ngModel" required />
+            <div [hidden]="name.valid || name.pristine" class="invalid-feedback">Name is required</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="url" class="form-label">URL<span class="text-danger">*</span></label>
+            <input id="url" class="form-control" type="text" [(ngModel)]="model.url" name="url" #url="ngModel" appUrlValidator required />
+            @if (url.dirty) {
+                @if (url.hasError('invalidUrlLength')) {
+                    <div class="invalid-feedback">URL is required</div>
+                } @else {
+                    @if (url.hasError('invalidUrlFormat')) {
+                        <div class="invalid-feedback">URL is not in the correct format</div>
+                    }
+                }
+            }
+            @if (!urlExists) {
+                <div class="invalid-feedback">URL does not exist</div>
+            }
+        </div>
+
+        <button type="submit" [disabled]="name.invalid || url.invalid" class="btn btn-primary">{{addOrEditLabel}}</button>
+        @if (name.value?.length > 0 || url.value?.length > 0) {
+            <button type="reset" (click)="onClear()" class="btn btn-light ms-2">Clear</button>
+        }
+        
+    </form>
+</div>
