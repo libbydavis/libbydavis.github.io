@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BookmarkFormComponent } from './bookmark-form/bookmark-form.component';
 
 @Component({
   selector: 'app-root',

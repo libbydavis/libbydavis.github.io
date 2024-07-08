@@ -6,16 +6,16 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-results-page',
   standalone: true,
   imports: [RouterModule],
-  templateUrl: './results-page.component.html',
-  styleUrl: './results-page.component.css'
+  templateUrl: './results-page.component.html'
 })
+/**
+ * This component displays a thank you message, a bookmark and a link back to '/'.
+ */
 export class ResultsPageComponent {
   bookmark: Bookmark | null;
 
   constructor(private router: Router) {
-    let routerState = this.router.getCurrentNavigation()?.extras.state;
-
+    const routerState = this.router.getCurrentNavigation()?.extras.state;
     this.bookmark = routerState ? routerState['bookmark'] : null;
-    
   }
 }

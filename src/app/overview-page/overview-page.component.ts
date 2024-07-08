@@ -7,9 +7,14 @@ import { Bookmark } from '../bookmark';
   selector: 'app-overview-page',
   standalone: true,
   imports: [BookmarkFormComponent, BookmarkListComponent],
-  templateUrl: './overview-page.component.html',
-  styleUrl: './overview-page.component.css'
+  templateUrl: './overview-page.component.html'
 })
+/**
+ * This component displays the BookmarkFormComponent and BookmarkListComponent.
+ * It also initialises the bookmarksList by getting them from local storage
+ *     and sets bookmark data for editing when a user has selected to edit 
+ *     a bookmark in the bookmark list.
+ */
 export class OverviewPageComponent {
   bookmarkFormData?: Bookmark;
   bookmarksList: Bookmark[];
@@ -21,6 +26,7 @@ export class OverviewPageComponent {
   }
 
   setBookmarkEditData(bookmark: Bookmark) {
+    // set bookmark data when user has selected edit on a bookmark
     this.bookmarkFormData = bookmark;
   }
 }

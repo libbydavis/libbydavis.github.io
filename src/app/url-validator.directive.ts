@@ -12,7 +12,7 @@ import { AbstractControl, Validator, NG_VALIDATORS, ValidationErrors } from '@an
 })
 export class UrlValidatorDirective implements Validator {
 
-  validate(control: AbstractControl<any, any>): ValidationErrors | null {
+  validate(control: AbstractControl<string>): ValidationErrors | null {
     // set an invalidUrlLength error if the url is less than 1 character
     if (control.value?.length < 1) {
       return {invalidUrlLength: true}
