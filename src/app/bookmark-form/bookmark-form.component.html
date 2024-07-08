@@ -9,7 +9,7 @@
 
         <div class="mb-3">
             <label for="url" class="form-label">URL<span class="text-danger">*</span></label>
-            <input id="url" class="form-control" type="text" [(ngModel)]="model.url" name="url" #url="ngModel" appUrlValidator required />
+            <input id="url" class="form-control" type="text" [(ngModel)]="model.url" name="url" #url="ngModel" (ngModelChange)="onUrlInputChange()" appUrlValidator required />
             @if (url.dirty) {
                 @if (url.hasError("invalidUrlLength")) {
                     <div class="invalid-feedback">URL is required</div>
@@ -19,8 +19,8 @@
                     }
                 }
             }
-            @if (!urlExists) {
-                <div class="invalid-feedback">URL does not exist</div>
+            @if (urlError !== null) {
+                <div class="invalid-feedback">{{urlError}}</div>
             }
         </div>
 

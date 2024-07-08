@@ -33,7 +33,7 @@ export class BookmarkFormComponent {
   model!: Bookmark;
   addOrEditLabel = 'Add Bookmark';
   newBookmarkId!: number;
-  urlExists = true;
+  urlError: string | null = null;
 
   constructor(private router: Router) {}
 
@@ -67,37 +67,47 @@ export class BookmarkFormComponent {
     this.addOrEditLabel = 'Add Bookmark';
   }
 
+  onUrlInputChange() {
+    this.urlError = null;
+  }
+
   /**
    * This function checks that a url exists, saves the bookmark to the Input variable and local storage,
    *     then navigates to the results page.
    */
   onSubmit() {
     // if we can send a request to the url it means it exists
-    fetch(this.model.url, {mode: 'no-cors'}).then(() => {
-      //edit bookmark
-      if (this.bookmarkToEdit) {
-        let notFound = true;
-        let iterator = 0;
-        while (notFound && iterator < this.bookmarksList.length) {
-          if (this.bookmarksList[iterator].id === this.model.id) {
-            notFound = false;
-            this.bookmarksList[iterator] = this.model;
+    if (navigator.onLine === false) {
+      this.urlError = "You are not connected to the internet. Unable to validate URL";
+    } else {
+      // had to use a fetch instead of httpClient to be able to use {mode: 'no-cors'} 
+      //    to request to websites that we don't have authorisation for
+      fetch(this.model.url, {mode: 'no-cors'}).then(() => {
+        //edit bookmark
+        if (this.bookmarkToEdit) {
+          let notFound = true;
+          let iterator = 0;
+          while (notFound && iterator < this.bookmarksList.length) {
+            if (this.bookmarksList[iterator].id === this.model.id) {
+              notFound = false;
+              this.bookmarksList[iterator] = this.model;
+            }
+            iterator++;
           }
-          iterator++;
+        } else {
+          // add new bookmark
+          this.bookmarksList.push(this.model);
         }
-      } else {
-        // add new bookmark
-        this.bookmarksList.push(this.model);
-      }
-      this.bookmarksListChange.emit(this.bookmarksList);
-      
-      // save back to storage
-      localStorage.setItem('links', JSON.stringify(this.bookmarksList));
-      
-      // navigate to results page
-      this.router.navigate(['/results'], {state: {bookmark: this.model}})
-    }).catch(() => {
-      this.urlExists = false;
-    })
+        this.bookmarksListChange.emit(this.bookmarksList);
+
+        // save back to storage
+        localStorage.setItem('links', JSON.stringify(this.bookmarksList));
+        
+        // navigate to results page
+        this.router.navigate(['/results'], {state: {bookmark: this.model}});
+      }).catch(() => {
+        this.urlError = "URL does not exist";
+      })
+    }
   }
 }
