@@ -14,6 +14,7 @@ describe('BookmarkFormComponent', () => {
 
     fixture = TestBed.createComponent(BookmarkFormComponent);
     component = fixture.componentInstance;
+    component.bookmarksList = [{id: 1, name: 'test bookmark', url: 'https://www.google.com/'}, {id: 2, name: 'test bookmark 2', url: 'https://angular.dev/'}];
     fixture.detectChanges();
   });
 
