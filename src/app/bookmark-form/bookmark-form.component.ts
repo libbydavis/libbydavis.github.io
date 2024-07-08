@@ -82,7 +82,7 @@ export class BookmarkFormComponent {
     } else {
       // had to use a fetch instead of httpClient to be able to use {mode: 'no-cors'} 
       //    to request to websites that we don't have authorisation for
-      fetch(this.model.url, {mode: 'no-cors'}).then(() => {
+      fetch(this.model.url, {method: 'head', mode: 'no-cors'}).then(() => {
         //edit bookmark
         if (this.bookmarkToEdit) {
           let notFound = true;
